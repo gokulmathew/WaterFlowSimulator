@@ -1,24 +1,29 @@
 import React from "react";
 import "./index.css";
 
-export default function Node(props) {
-  const {
-    col,
-    row,
-    isBlock,
-    isVisited,
-    columnChosen,
-    handleBlockCell,
-    handleSelectStartColumn
-  } = props;
+interface INode
+{
 
-  const handleColumnSelection = (row, col) => {
+  col:any
+  row:any
+  key:any
+  isBlock:any
+  isVisited:any
+  columnChosen:any
+  handleSelectStartColumn:any
+  handleBlockCell:any
+}
+
+export default function Node({col,row,key,isBlock,isVisited,columnChosen,handleSelectStartColumn,handleBlockCell}:INode) {
+
+
+  const handleColumnSelection = (row:any, col:any) => {
     if (row === 0) {
       handleSelectStartColumn(col);
     }
   };
 
-  const allowDrop = (e) => {
+  const allowDrop = (e:any) => {
     e.preventDefault();
   };
 

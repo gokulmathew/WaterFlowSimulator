@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import {useState} from 'react';
 import Cell from "./Cell";
 import { cloneDeep } from "lodash";
 import "./index.css";
 
-const getInitialGrid = (rowCount, columnCount) => {
+const getInitialGrid = (rowCount:any, columnCount:any) => {
   const grid = [];
   for (let row = 0; row < rowCount + 2; row++) {
     const currentRow = [];
@@ -20,7 +20,7 @@ const getInitialGrid = (rowCount, columnCount) => {
   return grid;
 };
 
-const getBlocks = (blockCount) => {
+const getBlocks = (blockCount:any) => {
   const blocks = [];
   for (let index = 0; index < blockCount; index++) {
     blocks.push({ isMoved: false });
@@ -28,54 +28,70 @@ const getBlocks = (blockCount) => {
   return blocks;
 };
 
-class WaterSimulator extends Component {
-  constructor(props) {
-    super(props);
-    const { rowCount, columnCount, blockCount } = this.props;
-    this.state = {
-      columnChosen: false,
-      simulationStarted: false,
-      simulationCompleted: false,
-      blocks: getBlocks(blockCount),
-      grid: getInitialGrid(rowCount, columnCount)
-    };
-  }
+interface IWaterSimulator
+{
+  rowCount:number
+  columnCount:number
+  blockCount:number
+  handleCurrentScreenChange:(e:any)=>void;
+}
+export default function  WaterSimulator( {
+  rowCount,columnCount,blockCount,handleCurrentScreenChange
+}:IWaterSimulator)  {
 
-  handleSelectStartColumn = (col) => {
-    const { grid } = this.state;
+  const[columnChosen, setColumnChosen]= useState<boolean>(false);
+  const[simulationStarted, setSimulationStarted]= useState<boolean>(false);
+  const[simulationCompleted, setSimulationCompleted]= useState<boolean>(false);
+  const[blocks, setBlocks]= useState(getBlocks(blockCount));
+  const[grid, setGrid]= useState(getInitialGrid(rowCount, columnCount));
+
+
+
+  // constructor(props) {
+  //   super(props);
+  //   const { rowCount, columnCount, blockCount } = this.props;
+  //   this.state = {
+  //     columnChosen: false,
+  //     simulationStarted: false,
+  //     simulationCompleted: false,
+  //     blocks: getBlocks(blockCount),
+  //     grid: getInitialGrid(rowCount, columnCount)
+  //   };
+  // }
+
+  const handleSelectStartColumn = (col:any) => {
     const updatedGrid = cloneDeep(grid);
-    this.setState({ columnChosen: true });
+    setColumnChosen(true);
 
     setTimeout(() => {
-      const currentCellsProcessed = [];
-      const selectedStartCell = updatedGrid[0][col];
+      const currentCellsProcessed:any = [];
+      const selectedStartCell :any= updatedGrid[0][col];
       selectedStartCell.isVisited = true;
-      this.setState({ grid: updatedGrid });
+      setGrid(updatedGrid)
       currentCellsProcessed.push(selectedStartCell);
 
       const interval = setInterval(() => {
         const currentCell = currentCellsProcessed.shift();
         currentCellsProcessed.push(
-          ...this.getNextCell(currentCell, updatedGrid)
+          ...getNextCell(currentCell, updatedGrid)
         );
-        this.setState({ grid: updatedGrid });
+        setGrid(updatedGrid)
         if (currentCellsProcessed.length === 0) {
           clearInterval(interval);
-          this.setState({ simulationCompleted: true });
+          setSimulationCompleted(true)
         }
       }, 100);
     }, 100);
   };
 
-  handleBlockCell = (row, col) => {
-    const { grid } = this.state;
+  const handleBlockCell = (row:any, col:any) => {
     const updatedGrid = cloneDeep(grid);
     updatedGrid[row][col].isBlock = true;
-    this.setState({ grid: updatedGrid });
+    setGrid(updatedGrid)
   };
 
-  getNextCell({ row, col }, updatedGrid) {
-    let nextCells = [];
+  const getNextCell  =({ row, col }:any, updatedGrid:any) => {
+    let nextCells :any = [];
     //If the flow reaches the last row, then end the simulation
     if (row === updatedGrid.length - 1) {
       return nextCells;
@@ -109,35 +125,28 @@ class WaterSimulator extends Component {
     return nextCells;
   }
 
-  handleDragEnd = (e, index) => {
+  const handleDragEnd = (e:any, index:any) => {
     const { dropEffect } = e.dataTransfer;
     if (dropEffect === "move" || dropEffect === "copy") {
-      const { blocks } = this.state;
       const updatedBlocks = cloneDeep(blocks);
       updatedBlocks[index].isMoved = true;
-      this.setState({
-        blocks: updatedBlocks
-      });
+      setBlocks(updatedBlocks)
     }
   };
 
-  startSimulation = () => {
-    this.setState({ simulationStarted: true });
+  const startSimulation = () => {
+    setSimulationStarted(true)
   };
 
-  handleReset = () => {
-    const { rowCount, columnCount, blockCount } = this.props;
-    this.setState({
-      columnChosen: false,
-      simulationStarted: false,
-      simulationCompleted: false,
-      blocks: getBlocks(blockCount),
-      grid: getInitialGrid(rowCount, columnCount)
-    });
+  const handleReset = () => {
+    setColumnChosen(false);
+    setSimulationStarted(false);
+    setSimulationCompleted(false);
+    setBlocks(getBlocks(blockCount));
+    setGrid(getInitialGrid(rowCount, columnCount));
   };
 
-  getHeaderText = (blocksMovedCount) => {
-    const { blockCount } = this.props;
+  const getHeaderText = (blocksMovedCount:any) => {
     return blocksMovedCount === blockCount ? (
       <p>
         Select the waterflow start point by clicking on any of the blue boxes
@@ -147,20 +156,20 @@ class WaterSimulator extends Component {
     );
   };
 
-  render() {
-    const { handleCurrentScreenChange, blockCount } = this.props;
-    const {
-      grid,
-      blocks,
-      columnChosen,
-      simulationStarted,
-      simulationCompleted
-    } = this.state;
+  // return() {
+    // const { handleCurrentScreenChange, blockCount } = this.props;
+    // const {
+    //   grid,
+    //   blocks,
+    //   columnChosen,
+    //   simulationStarted,
+    //   simulationCompleted
+    // } = this.state;
     const blocksMovedCount = blocks.filter((block) => block.isMoved).length;
 
     return (
       <>
-        {this.getHeaderText(blocksMovedCount)}
+        {getHeaderText(blocksMovedCount)}
         <div className="grid-container">
           <div className="grid">
             {grid.map((row, rowIdx) => {
@@ -182,11 +191,11 @@ class WaterSimulator extends Component {
                         isBlock={isBlock}
                         isVisited={isVisited}
                         columnChosen={columnChosen}
-                        handleSelectStartColumn={(col) =>
-                          this.handleSelectStartColumn(col)
+                        handleSelectStartColumn={(col:any) =>
+                          handleSelectStartColumn(col)
                         }
-                        handleBlockCell={(row, col) =>
-                          this.handleBlockCell(row, col)
+                        handleBlockCell={(row:any, col:any) =>
+                          handleBlockCell(row, col)
                         }
                       ></Cell>
                     );
@@ -206,7 +215,7 @@ class WaterSimulator extends Component {
                   <div
                     draggable
                     className={`block ${block.isMoved ? "moved" : ""}`}
-                    onDragEnd={(e) => this.handleDragEnd(e, idx)}
+                    onDragEnd={(e) => handleDragEnd(e, idx)}
                   ></div>
                 </div>
               );
@@ -217,7 +226,7 @@ class WaterSimulator extends Component {
         <div className="action-buttons">
           <button
             className="btn margin-right"
-            onClick={handleCurrentScreenChange}
+            onClick={()=>handleCurrentScreenChange(false)}
           >
             Back
           </button>
@@ -225,20 +234,20 @@ class WaterSimulator extends Component {
             <button
               className="btn"
               disabled={blocksMovedCount !== blockCount}
-              onClick={this.startSimulation}
+              onClick={()=>startSimulation()}
             >
               Start Simulation
             </button>
           )}
           {simulationCompleted && (
-            <button className="btn" onClick={this.handleReset}>
+            <button className="btn" onClick={()=>handleReset()}>
               Reset
             </button>
           )}
         </div>
       </>
     );
-  }
+  // }
 }
 
-export default WaterSimulator;
+

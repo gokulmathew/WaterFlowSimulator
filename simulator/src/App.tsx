@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import WaterFlowGridCreator from "./components/WaterFlowGridCreator";
-// import WaterSimulator from "./components/WaterSimulator";
+import WaterSimulator from "./components/WaterSimulator";
 import './App.css';
 
 function App() {
@@ -27,14 +27,14 @@ function App() {
     {shouldShowWaterSimulatorScreen && <p>dsfdf</p>
 
     }
-    {/* {shouldShowWaterSimulatorScreen && (
+    {shouldShowWaterSimulatorScreen && (
       <WaterSimulator
         rowCount={rowCount}
         blockCount={blockCount}
         columnCount={columnCount}
-        handleCurrentScreenChange={this.handleCurrentScreenChange}
+        handleCurrentScreenChange={setShouldShowWaterSimulatorScreen}  
       />
-    )}  */}
+    )} 
   </div>
   );
 }
