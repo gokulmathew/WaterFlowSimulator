@@ -33,10 +33,10 @@ interface IWaterSimulator
   rowCount:number
   columnCount:number
   blockCount:number
-  handleCurrentScreenChange:(e:any)=>void;
+  setShowWaterSimulator:(e:any)=>void;
 }
 export default function  WaterSimulator( {
-  rowCount,columnCount,blockCount,handleCurrentScreenChange
+  rowCount,columnCount,blockCount,setShowWaterSimulator
 }:IWaterSimulator)  {
 
   const[columnChosen, setColumnChosen]= useState<boolean>(false);
@@ -156,15 +156,7 @@ export default function  WaterSimulator( {
     );
   };
 
-  // return() {
-    // const { handleCurrentScreenChange, blockCount } = this.props;
-    // const {
-    //   grid,
-    //   blocks,
-    //   columnChosen,
-    //   simulationStarted,
-    //   simulationCompleted
-    // } = this.state;
+
     const blocksMovedCount = blocks.filter((block) => block.isMoved).length;
 
     return (
@@ -226,7 +218,7 @@ export default function  WaterSimulator( {
         <div className="action-buttons">
           <button
             className="btn margin-right"
-            onClick={()=>handleCurrentScreenChange(false)}
+            onClick={()=>setShowWaterSimulator(false)}
           >
             Back
           </button>
