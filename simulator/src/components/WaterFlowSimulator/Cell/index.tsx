@@ -9,12 +9,12 @@ interface INode
   key:any
   isBlock:any
   isVisited:any
-  columnChosen:any
+  columnSelected:any
   handleSelectStartColumn:any
   handleBlockCell:any
 }
 
-export default function Node({col,row,key,isBlock,isVisited,columnChosen,handleSelectStartColumn,handleBlockCell}:INode) {
+export default function Node({col,row,key,isBlock,isVisited,columnSelected,handleSelectStartColumn,handleBlockCell}:INode) {
 
 
   const handleColumnSelection = (row:any, col:any) => {
@@ -34,7 +34,7 @@ export default function Node({col,row,key,isBlock,isVisited,columnChosen,handleS
       id={`cell-${row}-${col}`}
       className={`cell ${isBlock ? "cell-block" : ""} ${
         isVisited ? "cell-visited" : ""
-      } ${row === 0 && !isVisited && columnChosen ? "hide" : ""}`}
+      } ${row === 0 && !isVisited && columnSelected ? "hide" : ""}`}
       onClick={() => handleColumnSelection(row, col)}
     ></div>
   );

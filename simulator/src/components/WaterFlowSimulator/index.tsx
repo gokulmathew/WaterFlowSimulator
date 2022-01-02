@@ -44,22 +44,22 @@ export default function  WaterFlowSimulator( {
   };
 
   
-  const[columnChosen, setColumnChosen]= useState<boolean>(false);
-  const[simulationStarted, setSimulationStarted]= useState<boolean>(false);
-  const[simulationCompleted, setSimulationCompleted]= useState<boolean>(false);
-  const[blocks, setBlocks]= useState(getBlocks(gridBlockCount));
-  const[grid, setGrid]= useState(getInitialGrid(gridRowCount, gridColumnCount));
+  const[columnSelected, setColumnSelected]= useState<boolean>(false);
+  const[waterFlowSimulationStarted, setWaterFlowSimulationStarted]= useState<boolean>(false);
+  const[waterFlowSimulationCompleted, setWaterFlowSimulationCompleted]= useState<boolean>(false);
+  const[gridBlocks, setGridBlocks]= useState(getBlocks(gridBlockCount));
+  const[waterFlowGrid, setWaterFlowGrid]= useState(getInitialGrid(gridRowCount, gridColumnCount));
 
 
   const handleSelectStartColumn = (col:any) => {
-    const updatedGrid = cloneDeep(grid);
-    setColumnChosen(true);
+    const updatedGrid = cloneDeep(waterFlowGrid);
+    setColumnSelected(true);
 
     setTimeout(() => {
       const currentCellsProcessed:any = [];
       const selectedStartCell :any= updatedGrid[0][col];
       selectedStartCell.isVisited = true;
-      setGrid(updatedGrid)
+      setWaterFlowGrid(updatedGrid)
       currentCellsProcessed.push(selectedStartCell);
 
       const interval = setInterval(() => {
@@ -67,19 +67,19 @@ export default function  WaterFlowSimulator( {
         currentCellsProcessed.push(
           ...getNextCell(currentCell, updatedGrid)
         );
-        setGrid(updatedGrid)
+        setWaterFlowGrid(updatedGrid)
         if (currentCellsProcessed.length === 0) {
           clearInterval(interval);
-          setSimulationCompleted(true)
+          setWaterFlowSimulationCompleted(true)
         }
       }, 100);
     }, 100);
   };
 
   const handleBlockCell = (row:any, col:any) => {
-    const updatedGrid = cloneDeep(grid);
+    const updatedGrid = cloneDeep(waterFlowGrid);
     updatedGrid[row][col].isBlock = true;
-    setGrid(updatedGrid)
+    setWaterFlowGrid(updatedGrid)
   };
 
   const getNextCell  =({ row, col }:any, updatedGrid:any) => {
@@ -120,19 +120,19 @@ export default function  WaterFlowSimulator( {
   const handleDragEnd = (e:any, index:any) => {
     const { dropEffect } = e.dataTransfer;
     if (dropEffect === "move" || dropEffect === "copy") {
-      const updatedBlocks = cloneDeep(blocks);
+      const updatedBlocks = cloneDeep(gridBlocks);
       updatedBlocks[index].isMoved = true;
-      setBlocks(updatedBlocks)
+      setGridBlocks(updatedBlocks)
     }
   };
 
   // Info: To reset All data
   const resetAllData = () => {
-    setColumnChosen(false);
-    setSimulationStarted(false);
-    setSimulationCompleted(false);
-    setBlocks(getBlocks(gridBlockCount));
-    setGrid(getInitialGrid(gridRowCount, gridColumnCount));
+    setColumnSelected(false);
+    setWaterFlowSimulationStarted(false);
+    setWaterFlowSimulationCompleted(false);
+    setGridBlocks(getBlocks(gridBlockCount));
+    setWaterFlowGrid(getInitialGrid(gridRowCount, gridColumnCount));
   };
 
   // Info: Displaying header dynamically
@@ -147,7 +147,7 @@ export default function  WaterFlowSimulator( {
   };
 
 
-    const blocksMovedCount = blocks.filter((block) => block.isMoved).length;
+    const blocksMovedCount = gridBlocks.filter((block) => block.isMoved).length;
 
     return (
       <>
@@ -156,13 +156,13 @@ export default function  WaterFlowSimulator( {
 
         <div className="grid-container">
           <div className="grid">
-            {grid.map((row, rowIdx) => {
+            {waterFlowGrid.map((row, rowIdx) => {
               return (
                 <div
                   key={rowIdx}
                   className={`
                   grid-row
-                  ${rowIdx === 0 && simulationStarted ? "show" : ""}
+                  ${rowIdx === 0 && waterFlowSimulationStarted ? "show" : ""}
                 `}
                 >
                   {row.map((cell, cellIdx) => {
@@ -174,7 +174,7 @@ export default function  WaterFlowSimulator( {
                         key={cellIdx}
                         isBlock={isBlock}
                         isVisited={isVisited}
-                        columnChosen={columnChosen}
+                        columnSelected={columnSelected}
                         handleSelectStartColumn={(col:any) =>
                           handleSelectStartColumn(col)
                         }
@@ -189,8 +189,9 @@ export default function  WaterFlowSimulator( {
             })}
           </div>
 
+{/* Info: Blocks are displayed */}
           <div className="blocks">
-            {blocks.map((block, idx) => {
+            {gridBlocks.map((block, idx) => {
               return (
                 <div
                   className={`block-container ${block.isMoved ? "moved" : ""}`}
@@ -217,16 +218,16 @@ export default function  WaterFlowSimulator( {
           </button>
 
           {/* Info: Based on simulation status, text is displayed dynamically */}
-          {!simulationStarted && (
+          {!waterFlowSimulationStarted && (
             <button
               className="btn"
               disabled={blocksMovedCount !== gridBlockCount}
-              onClick={()=>setSimulationStarted(true)}
+              onClick={()=>setWaterFlowSimulationStarted(true)}
             >
               Start Simulation
             </button>
           )}
-          {simulationCompleted && (
+          {waterFlowSimulationCompleted && (
             <button className="btn" onClick={()=>resetAllData()}>
               Reset
             </button>
