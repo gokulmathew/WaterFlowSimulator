@@ -50,23 +50,23 @@ export default function  WaterFlowSimulator( {
 
 
   const handleBlockCell = (row:any, col:any) => {
-    const updatedGrid = cloneDeep(waterFlowGrid);
-    updatedGrid[row][col].isBlock = true;
-    setWaterFlowGrid(updatedGrid)
+    const updatedWaterGrid = cloneDeep(waterFlowGrid);
+    updatedWaterGrid[row][col].isBlock = true;
+    setWaterFlowGrid(updatedWaterGrid)
   };
 
   const getNextCell  =({ row, col }:any, updatedGrid:any) => {
-    let nextCells :any = [];
+    let nextGridCells :any = [];
     //If the flow reaches the last row, then end the simulation
     if (row === updatedGrid.length - 1) {
-      return nextCells;
+      return nextGridCells;
     }
 
     //If direct node which is below current node is not a wall or already visisted, then its a valid nextNode
     let nextCell = updatedGrid[row + 1][col];
     if (nextCell && !nextCell.isVisited && !nextCell.isBlock) {
       nextCell.isVisited = true;
-      nextCells.push(nextCell);
+      nextGridCells.push(nextCell);
     } else {
       let leftCell;
       let rightCell;
@@ -75,7 +75,7 @@ export default function  WaterFlowSimulator( {
         leftCell = updatedGrid[row][col - 1];
         if (leftCell && !leftCell.isVisited && !leftCell.isBlock) {
           leftCell.isVisited = true;
-          nextCells.push(leftCell);
+          nextGridCells.push(leftCell);
         }
       }
 
@@ -83,41 +83,39 @@ export default function  WaterFlowSimulator( {
         rightCell = updatedGrid[row][col + 1];
         if (rightCell && !rightCell.isVisited && !rightCell.isBlock) {
           rightCell.isVisited = true;
-          nextCells.push(rightCell);
+          nextGridCells.push(rightCell);
         }
       }
     }
-    return nextCells;
+    return nextGridCells;
   }
 
   const handleDragEnd = (e:any, index:any) => {
     const { dropEffect } = e.dataTransfer;
     if (dropEffect === "move" || dropEffect === "copy") {
-      const updatedBlocks = cloneDeep(gridBlocks);
-      updatedBlocks[index].isMoved = true;
-      setGridBlocks(updatedBlocks)
+      const updatedCellBlocks = cloneDeep(gridBlocks);
+      updatedCellBlocks[index].isMoved = true;
+      setGridBlocks(updatedCellBlocks)
     }
   };
 
-
-  
   const handleClickedStartColumn = (col:any) => {
-    const updatedGrid = cloneDeep(waterFlowGrid);
+    const updatedWaterGrid = cloneDeep(waterFlowGrid);
     setColumnSelected(true);
 
     setTimeout(() => {
       const currentCellsProcessed:any = [];
-      const selectedStartCell :any= updatedGrid[0][col];
+      const selectedStartCell :any= updatedWaterGrid[0][col];
       selectedStartCell.isVisited = true;
-      setWaterFlowGrid(updatedGrid)
+      setWaterFlowGrid(updatedWaterGrid)
       currentCellsProcessed.push(selectedStartCell);
 
       const interval = setInterval(() => {
         const currentCell = currentCellsProcessed.shift();
         currentCellsProcessed.push(
-          ...getNextCell(currentCell, updatedGrid)
+          ...getNextCell(currentCell, updatedWaterGrid)
         );
-        setWaterFlowGrid(updatedGrid)
+        setWaterFlowGrid(updatedWaterGrid)
         if (currentCellsProcessed.length === 0) {
           clearInterval(interval);
           setWaterFlowSimulationCompleted(true)
@@ -140,10 +138,10 @@ export default function  WaterFlowSimulator( {
   const getDynamicHeader = (blocksMovedCount:any) => {
     return blocksMovedCount === gridBlockCount ? (
       <p>
-        Select the waterflow start point by clicking on any of the blue boxes
+        Select the waterflow start point by clicking on any of the blue boxes on first row
       </p>
     ) : (
-      <p>Drag the obstructions and place it inside grid</p>
+      <p>Drag the obstructions and drop it any grid cell</p>
     );
   };
 
@@ -166,13 +164,13 @@ export default function  WaterFlowSimulator( {
                   ${rowIndex === 0 && waterFlowSimulationStarted ? "show" : ""}
                 `}
                 >
-                  {row.map((cell, cellIdx) => {
+                  {row.map((cell, cellIndex) => {
                     const { row, col, isBlock, isVisited } = cell;
                     return (
                       <GridCell
                         col={col}
                         row={row}
-                        key={cellIdx}
+                        key={cellIndex}
                         isBlock={isBlock}
                         isVisited={isVisited}
                         columnSelected={columnSelected}
@@ -190,7 +188,7 @@ export default function  WaterFlowSimulator( {
             })}
           </div>
 
-{/* Info: Blocks are displayed */}
+    {/* Info: Blocks are displayed */}
           <div className="blocks">
             {gridBlocks.map((block, idx) => {
               return (
