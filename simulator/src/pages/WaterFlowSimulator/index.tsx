@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import GridCell from "../GridCell";
+import GridCell from "../../components/GridCell";
 import { cloneDeep } from "lodash";
 import "./index.css";
 

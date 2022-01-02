@@ -1,6 +1,6 @@
 import {useState} from 'react';
-import RowColumnBlockSelector from "./components/RowColumnBlockSelector";
-import WaterFlowSimulator from "./components/WaterFlowSimulator";
+import RowColumnBlockSelector from "./pages/RowColumnBlockSelector";
+import WaterFlowSimulator from "./pages/WaterFlowSimulator";
 import './App.css';
 
 function App() {

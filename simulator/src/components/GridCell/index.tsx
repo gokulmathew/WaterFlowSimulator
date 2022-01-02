@@ -15,25 +15,25 @@ interface IGridCell
 export default function GridCell({col,row,key,isBlock,isVisited,columnSelected,handleClickedStartColumn,handleBlockCell}:IGridCell) {
 
 
-  const handleColumnSelection = (row:any, col:any) => {
+  const columnSelection = (row:any, col:any) => {
     if (row === 0) {
       handleClickedStartColumn(col);
     }
   };
 
-  const allowDrop = (e:any) => {
+  const allowCellDrop = (e:any) => {
     e.preventDefault();
   };
 
   return (
     <div
       onDrop={() => handleBlockCell(row, col)}
-      onDragOver={allowDrop}
+      onDragOver={allowCellDrop}
       id={`cell-${row}-${col}`}
       className={`cell ${isBlock ? "cell-block" : ""} ${
         isVisited ? "cell-visited" : ""
       } ${row === 0 && !isVisited && columnSelected ? "hide" : ""}`}
-      onClick={() => handleColumnSelection(row, col)}
+      onClick={() => columnSelection(row, col)}
     ></div>
   );
 }
