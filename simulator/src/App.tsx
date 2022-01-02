@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import RowColumnBlockSelector from "./components/RowColumnBlockSelector";
-import WaterSimulator from "./components/WaterSimulator";
+import WaterFlowSimulator from "./components/WaterFlowSimulator";
 import './App.css';
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
 
 {/* On click of next button, Water simulator component is shown  */}
     {showWaterSimulator && (
-      <WaterSimulator
+      <WaterFlowSimulator
         gridRowCount={gridRowCount}
         gridColumnCount={gridColumnCount}
         gridBlockCount={gridBlockCount}

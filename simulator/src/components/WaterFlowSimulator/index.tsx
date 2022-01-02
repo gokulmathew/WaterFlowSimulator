@@ -3,41 +3,47 @@ import Cell from "./Cell";
 import { cloneDeep } from "lodash";
 import "./index.css";
 
-const getInitialGrid = (rowCount:number, columnCount:number) => {
-  const grid = [];
-  for (let row = 0; row < rowCount + 2; row++) {
-    const currentRow = [];
-    for (let col = 0; col < columnCount; col++) {
-      currentRow.push({
-        col,
-        row,
-        isBlock: false,
-        isVisited: false
-      });
-    }
-    grid.push(currentRow);
-  }
-  return grid;
-};
 
-const getBlocks = (blockCount:any) => {
-  const blocks = [];
-  for (let index = 0; index < blockCount; index++) {
-    blocks.push({ isMoved: false });
-  }
-  return blocks;
-};
-
-interface IWaterSimulator
+interface IWaterFlowSimulator
 {
   gridRowCount:number
   gridColumnCount:number
   gridBlockCount:number
   setShowWaterSimulator:(e:any)=>void;
 }
-export default function  WaterSimulator( {
+
+export default function  WaterFlowSimulator( {
   gridRowCount,gridColumnCount,gridBlockCount,setShowWaterSimulator
-}:IWaterSimulator)  {
+}:IWaterFlowSimulator)  {
+
+  // Info: Creating grid array 
+  const getInitialGrid = (rowCount:number, columnCount:number) => {
+    const grid = [];
+    for (let row = 0; row < rowCount + 2; row++) {
+      const currentRow = [];
+      for (let col = 0; col < columnCount; col++) {
+        currentRow.push({
+          col,
+          row,
+          isBlock: false,
+          isVisited: false
+        });
+      }
+      grid.push(currentRow);
+    }
+    return grid;
+  };
+  
+  // Info: Creating blocks array and setting the array value with isMoved: false
+  const getBlocks = (blockCount:any) => {
+    const blocks = [];
+    for (let index = 0; index < blockCount; index++) {
+      blocks.push({ isMoved: false });
+    }
+    return blocks;
+  };
+
+  
   const[columnChosen, setColumnChosen]= useState<boolean>(false);
   const[simulationStarted, setSimulationStarted]= useState<boolean>(false);
   const[simulationCompleted, setSimulationCompleted]= useState<boolean>(false);
@@ -120,11 +126,8 @@ export default function  WaterSimulator( {
     }
   };
 
-  const startSimulation = () => {
-    setSimulationStarted(true)
-  };
-
-  const handleReset = () => {
+  // Info: To reset All data
+  const resetAllData = () => {
     setColumnChosen(false);
     setSimulationStarted(false);
     setSimulationCompleted(false);
@@ -132,7 +135,8 @@ export default function  WaterSimulator( {
     setGrid(getInitialGrid(gridRowCount, gridColumnCount));
   };
 
-  const getHeaderText = (blocksMovedCount:any) => {
+  // Info: Displaying header dynamically
+  const getDynamicHeader = (blocksMovedCount:any) => {
     return blocksMovedCount === gridBlockCount ? (
       <p>
         Select the waterflow start point by clicking on any of the blue boxes
@@ -147,7 +151,9 @@ export default function  WaterSimulator( {
 
     return (
       <>
-        {getHeaderText(blocksMovedCount)}
+      {/* Info: Getting dynamic header */}
+        {getDynamicHeader(blocksMovedCount)}
+
         <div className="grid-container">
           <div className="grid">
             {grid.map((row, rowIdx) => {
@@ -202,23 +208,26 @@ export default function  WaterSimulator( {
         </div>
 
         <div className="action-buttons">
+          {/* Info: on click of back button, grid property grid component will be displayed */}
           <button
             className="btn margin-right"
             onClick={()=>setShowWaterSimulator(false)}
           >
             Back
           </button>
+
+          {/* Info: Based on simulation status, text is displayed dynamically */}
           {!simulationStarted && (
             <button
               className="btn"
               disabled={blocksMovedCount !== gridBlockCount}
-              onClick={()=>startSimulation()}
+              onClick={()=>setSimulationStarted(true)}
             >
               Start Simulation
             </button>
           )}
           {simulationCompleted && (
-            <button className="btn" onClick={()=>handleReset()}>
+            <button className="btn" onClick={()=>resetAllData()}>
               Reset
             </button>
           )}
