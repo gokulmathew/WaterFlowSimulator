@@ -2,8 +2,6 @@ import {useState} from 'react';
 import GridCell from "../../components/GridCell";
 import { cloneDeep } from "lodash";
 import "./index.css";
-
-
 interface IWaterFlowSimulator
 {
   gridRowCount:number
@@ -50,31 +48,6 @@ export default function  WaterFlowSimulator( {
   const[gridBlocks, setGridBlocks]= useState(getBlocks(gridBlockCount));
   const[waterFlowGrid, setWaterFlowGrid]= useState(getInitialGrid(gridRowCount, gridColumnCount));
 
-
-  const handleClickedStartColumn = (col:any) => {
-    const updatedGrid = cloneDeep(waterFlowGrid);
-    setColumnSelected(true);
-
-    setTimeout(() => {
-      const currentCellsProcessed:any = [];
-      const selectedStartCell :any= updatedGrid[0][col];
-      selectedStartCell.isVisited = true;
-      setWaterFlowGrid(updatedGrid)
-      currentCellsProcessed.push(selectedStartCell);
-
-      const interval = setInterval(() => {
-        const currentCell = currentCellsProcessed.shift();
-        currentCellsProcessed.push(
-          ...getNextCell(currentCell, updatedGrid)
-        );
-        setWaterFlowGrid(updatedGrid)
-        if (currentCellsProcessed.length === 0) {
-          clearInterval(interval);
-          setWaterFlowSimulationCompleted(true)
-        }
-      }, 100);
-    }, 100);
-  };
 
   const handleBlockCell = (row:any, col:any) => {
     const updatedGrid = cloneDeep(waterFlowGrid);
@@ -125,6 +98,34 @@ export default function  WaterFlowSimulator( {
       setGridBlocks(updatedBlocks)
     }
   };
+
+
+  
+  const handleClickedStartColumn = (col:any) => {
+    const updatedGrid = cloneDeep(waterFlowGrid);
+    setColumnSelected(true);
+
+    setTimeout(() => {
+      const currentCellsProcessed:any = [];
+      const selectedStartCell :any= updatedGrid[0][col];
+      selectedStartCell.isVisited = true;
+      setWaterFlowGrid(updatedGrid)
+      currentCellsProcessed.push(selectedStartCell);
+
+      const interval = setInterval(() => {
+        const currentCell = currentCellsProcessed.shift();
+        currentCellsProcessed.push(
+          ...getNextCell(currentCell, updatedGrid)
+        );
+        setWaterFlowGrid(updatedGrid)
+        if (currentCellsProcessed.length === 0) {
+          clearInterval(interval);
+          setWaterFlowSimulationCompleted(true)
+        }
+      }, 100);
+    }, 100);
+  };
+
 
   // Info: To reset All data
   const resetAllData = () => {
