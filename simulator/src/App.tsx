@@ -5,9 +5,9 @@ import './App.css';
 
 function App() {
 
-  const[rowCount, setRowCount]= useState<number>(5);
-  const[columnCount, setColumnCount]= useState<number>(5);
-  const[blockCount, setBlockCount]= useState<number>(5);
+  const[gridRowCount, setGridRowCount]= useState<number>(5);
+  const[gridColumnCount, setGridColumnCount]= useState<number>(5);
+  const[gridBlockCount, setGridBlockCount]= useState<number>(5);
   const[showWaterSimulator, setShowWaterSimulator]= useState<boolean>(false);
 
   return (
@@ -17,12 +17,12 @@ function App() {
 {/* Info: By deafult showing row,column, block selection page */}
    {!showWaterSimulator && (
       <RowColumnBlockSelector
-        rowCount={rowCount}
-        setRowCount={setRowCount}
-        columnCount={columnCount}
-        setColumnCount={setColumnCount}
-        blockCount={blockCount}
-        setBlockCount={setBlockCount}
+        gridRowCount={gridRowCount}
+        setGridRowCount={setGridRowCount}
+        gridColumnCount={gridColumnCount}
+        setGridColumnCount={setGridColumnCount}
+        gridBlockCount={gridBlockCount}
+        setGridBlockCount={setGridBlockCount}
         showWaterSimulator={showWaterSimulator}
         setShowWaterSimulator={setShowWaterSimulator}  
       />
@@ -31,9 +31,9 @@ function App() {
 {/* On click of next button, Water simulator component is shown  */}
     {showWaterSimulator && (
       <WaterSimulator
-        rowCount={rowCount}
-        blockCount={blockCount}
-        columnCount={columnCount}
+        gridRowCount={gridRowCount}
+        gridColumnCount={gridColumnCount}
+        gridBlockCount={gridBlockCount}
         setShowWaterSimulator={setShowWaterSimulator}  
       />
     )} 

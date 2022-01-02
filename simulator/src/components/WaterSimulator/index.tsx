@@ -3,7 +3,7 @@ import Cell from "./Cell";
 import { cloneDeep } from "lodash";
 import "./index.css";
 
-const getInitialGrid = (rowCount:any, columnCount:any) => {
+const getInitialGrid = (rowCount:number, columnCount:number) => {
   const grid = [];
   for (let row = 0; row < rowCount + 2; row++) {
     const currentRow = [];
@@ -30,34 +30,20 @@ const getBlocks = (blockCount:any) => {
 
 interface IWaterSimulator
 {
-  rowCount:number
-  columnCount:number
-  blockCount:number
+  gridRowCount:number
+  gridColumnCount:number
+  gridBlockCount:number
   setShowWaterSimulator:(e:any)=>void;
 }
 export default function  WaterSimulator( {
-  rowCount,columnCount,blockCount,setShowWaterSimulator
+  gridRowCount,gridColumnCount,gridBlockCount,setShowWaterSimulator
 }:IWaterSimulator)  {
-
   const[columnChosen, setColumnChosen]= useState<boolean>(false);
   const[simulationStarted, setSimulationStarted]= useState<boolean>(false);
   const[simulationCompleted, setSimulationCompleted]= useState<boolean>(false);
-  const[blocks, setBlocks]= useState(getBlocks(blockCount));
-  const[grid, setGrid]= useState(getInitialGrid(rowCount, columnCount));
+  const[blocks, setBlocks]= useState(getBlocks(gridBlockCount));
+  const[grid, setGrid]= useState(getInitialGrid(gridRowCount, gridColumnCount));
 
-
-
-  // constructor(props) {
-  //   super(props);
-  //   const { rowCount, columnCount, blockCount } = this.props;
-  //   this.state = {
-  //     columnChosen: false,
-  //     simulationStarted: false,
-  //     simulationCompleted: false,
-  //     blocks: getBlocks(blockCount),
-  //     grid: getInitialGrid(rowCount, columnCount)
-  //   };
-  // }
 
   const handleSelectStartColumn = (col:any) => {
     const updatedGrid = cloneDeep(grid);
@@ -142,12 +128,12 @@ export default function  WaterSimulator( {
     setColumnChosen(false);
     setSimulationStarted(false);
     setSimulationCompleted(false);
-    setBlocks(getBlocks(blockCount));
-    setGrid(getInitialGrid(rowCount, columnCount));
+    setBlocks(getBlocks(gridBlockCount));
+    setGrid(getInitialGrid(gridRowCount, gridColumnCount));
   };
 
   const getHeaderText = (blocksMovedCount:any) => {
-    return blocksMovedCount === blockCount ? (
+    return blocksMovedCount === gridBlockCount ? (
       <p>
         Select the waterflow start point by clicking on any of the blue boxes
       </p>
@@ -225,7 +211,7 @@ export default function  WaterSimulator( {
           {!simulationStarted && (
             <button
               className="btn"
-              disabled={blocksMovedCount !== blockCount}
+              disabled={blocksMovedCount !== gridBlockCount}
               onClick={()=>startSimulation()}
             >
               Start Simulation
@@ -239,7 +225,6 @@ export default function  WaterSimulator( {
         </div>
       </>
     );
-  // }
 }
 
 

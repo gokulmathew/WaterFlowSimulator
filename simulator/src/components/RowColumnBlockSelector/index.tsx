@@ -2,51 +2,53 @@ import "./index.css";
 
 interface IGridCreator
 {
-  rowCount:number
-  columnCount:number
-  blockCount:number
+  gridRowCount:number;
+  setGridRowCount:(e:any)=>void;
+  gridColumnCount:number;
+  setGridColumnCount:(e:any)=>void;
+  gridBlockCount:number;
+  setGridBlockCount:(e:any)=>void;
   showWaterSimulator:boolean
   setShowWaterSimulator:(e:any)=>void;
-  setRowCount:(e:any)=>void;
-  setColumnCount:(e:any)=>void;
-  setBlockCount:(e:any)=>void;
 }
 
 export default function RowColumnBlockSelector({
-  rowCount,
-  columnCount,
-  blockCount,
+  gridRowCount,
+  gridColumnCount,
+  gridBlockCount,
+  setGridRowCount,
+  setGridColumnCount,
+  setGridBlockCount,
   setShowWaterSimulator,
   showWaterSimulator,
-  setRowCount,
-  setColumnCount,
-  setBlockCount
 }:IGridCreator) {
 
   const gridProperties = [
     {
       label: "Rows",
-      count: rowCount,
-      id: "rowCount"
+      count: gridRowCount,
+      id: "gridRowCount"
     },
     {
       label: "Columns",
-      count: columnCount,
-      id: "columnCount"
+      count: gridColumnCount,
+      id: "gridColumnCount"
     },
     {
       label: "Blocks",
-      count: blockCount,
-      id: "blockCount"
+      count: gridBlockCount,
+      id: "gridBlockCount"
     }
   ];
 
   // Info: Updating grid properties
-  const updateGridProperties = ( id:string, value:number)=>
+  const updateGridProperties = ( id:string, e:any)=>
   {
-if(id === 'rowCount') setRowCount(value)
-if(id === 'columnCount') setColumnCount(value)
-if(id === 'blockCount') setBlockCount(value)
+    let  { value } = e.target;
+    value = parseInt(value)
+if(id === 'gridRowCount') setGridRowCount(value)
+if(id === 'gridColumnCount') setGridColumnCount(value)
+if(id === 'gridBlockCount') setGridBlockCount(value)
   }
 
   return (
@@ -66,7 +68,7 @@ if(id === 'blockCount') setBlockCount(value)
                 min={1}
                 step={1}
                 max={10}
-                onChange={(e:any) => updateGridProperties(gridProperty.id, e.target.value)}
+                onChange={(e:any) => updateGridProperties(gridProperty.id, e)}
               />
             </div>
           );
