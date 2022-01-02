@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import Cell from "./Cell";
+import GridCell from "../GridCell";
 import { cloneDeep } from "lodash";
 import "./index.css";
 
@@ -51,7 +51,7 @@ export default function  WaterFlowSimulator( {
   const[waterFlowGrid, setWaterFlowGrid]= useState(getInitialGrid(gridRowCount, gridColumnCount));
 
 
-  const handleSelectStartColumn = (col:any) => {
+  const handleClickedStartColumn = (col:any) => {
     const updatedGrid = cloneDeep(waterFlowGrid);
     setColumnSelected(true);
 
@@ -156,32 +156,32 @@ export default function  WaterFlowSimulator( {
 
         <div className="grid-container">
           <div className="grid">
-            {waterFlowGrid.map((row, rowIdx) => {
+            {waterFlowGrid.map((row, rowIndex) => {
               return (
                 <div
-                  key={rowIdx}
+                  key={rowIndex}
                   className={`
                   grid-row
-                  ${rowIdx === 0 && waterFlowSimulationStarted ? "show" : ""}
+                  ${rowIndex === 0 && waterFlowSimulationStarted ? "show" : ""}
                 `}
                 >
                   {row.map((cell, cellIdx) => {
                     const { row, col, isBlock, isVisited } = cell;
                     return (
-                      <Cell
+                      <GridCell
                         col={col}
                         row={row}
                         key={cellIdx}
                         isBlock={isBlock}
                         isVisited={isVisited}
                         columnSelected={columnSelected}
-                        handleSelectStartColumn={(col:any) =>
-                          handleSelectStartColumn(col)
+                        handleClickedStartColumn={(col:any) =>
+                          handleClickedStartColumn(col)
                         }
                         handleBlockCell={(row:any, col:any) =>
                           handleBlockCell(row, col)
                         }
-                      ></Cell>
+                      ></GridCell>
                     );
                   })}
                 </div>

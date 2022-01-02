@@ -1,25 +1,23 @@
-import React from "react";
 import "./index.css";
 
-interface INode
+interface IGridCell
 {
-
   col:any
   row:any
   key:any
   isBlock:any
   isVisited:any
   columnSelected:any
-  handleSelectStartColumn:any
+  handleClickedStartColumn:any
   handleBlockCell:any
 }
 
-export default function Node({col,row,key,isBlock,isVisited,columnSelected,handleSelectStartColumn,handleBlockCell}:INode) {
+export default function GridCell({col,row,key,isBlock,isVisited,columnSelected,handleClickedStartColumn,handleBlockCell}:IGridCell) {
 
 
   const handleColumnSelection = (row:any, col:any) => {
     if (row === 0) {
-      handleSelectStartColumn(col);
+      handleClickedStartColumn(col);
     }
   };
 
